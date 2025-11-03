@@ -9,4 +9,4 @@ para demostrar el entrenamiento y exportación de una red neuronal con **TensorF
 3. Visualización e interacción desde el navegador con HTML y JS.  
 
 ## 🌐 Demo
-👉 [Abrir la demo en GitHub Pages]([https://dafanadorc.github.io/modelo_tensorflow])
+👉 Abrir la demo en GitHub Pages: https://dafanadorc.github.io/modelo_tensorflow
