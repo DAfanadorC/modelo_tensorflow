@@ -43,9 +43,7 @@ Proyecto creado por <b>Diego Andrés Afanador Calderón</b> y <b>Jesús Daniel M
     async function predict(){
       if(!model){ alert('Modelo no cargado'); return; }
       const v = Number(document.getElementById('inputValue').value);
-      // Si usaste scaler, aplica aquí la transformación:
-      // const scaled = (v - mean) / std; const input = tf.tensor2d([scaled],[1,1]);
-      // Normalización (usa los valores que imprimiste en Colab)
+      // Normalización (usa los valores que imprimi en Colab)
       const mean = 4.714285714285714;
       const std = 23.96120126072758;
 
