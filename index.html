@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Modelo TFJS — Demo</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
+  <style>
+    body{font-family:Inter,Arial;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#f4f7fb}
+    .card{background:#fff;padding:24px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,0.06);width:360px;text-align:center}
+    input{width:100%;padding:10px;margin-top:10px;border-radius:8px;border:1px solid #ddd}
+    button{margin-top:12px;padding:10px 14px;border-radius:8px;border:0;background:#1976d2;color:white;cursor:pointer}
+    .res{margin-top:16px;font-weight:700}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <p style="text-align:center; font-size:14px; color:#555; margin-top:20px;">
+Proyecto creado por <b>Diego Andrés Afanador Calderón</b> y <b>Jesús Daniel Martínez Anaya</b>
+</p>
+    <h2>Demo modelo TFJS</h2>
+    <p>Introduce el valor de entrada (°C):</p>
+    <input id="inputValue" type="number" placeholder="Ej: 25" />
+    <button id="predictBtn">Predecir</button>
+    <div class="res" id="result">—</div>
+    <div style="font-size:12px;margin-top:10px;color:#666">Estado del modelo: <span id="status">cargando...</span></div>
+  </div>
+
+  <script>
+    const MODEL_PATH = './folder_model/model.json';
+    let model = null;
+
+    async function init(){
+      try{
+        document.getElementById('status').textContent = 'cargando modelo...';
+        model = await tf.loadGraphModel(MODEL_PATH);
+        document.getElementById('status').textContent = 'modelo cargado ✅';
+      }catch(e){
+        console.error(e);
+        document.getElementById('status').textContent = 'error cargando modelo';
+      }
+    }
+    async function predict(){
+      if(!model){ alert('Modelo no cargado'); return; }
+      const v = Number(document.getElementById('inputValue').value);
+      // Si usaste scaler, aplica aquí la transformación:
+      // const scaled = (v - mean) / std; const input = tf.tensor2d([scaled],[1,1]);
+      // Normalización (usa los valores que imprimiste en Colab)
+      const mean = 4.714285714285714;
+      const std = 23.96120126072758;
+
+      // aplicar StandardScaler al valor ingresado
+      const scaled = (v - mean) / std;
+
+      // pasar valor escalado al modelo
+      const input = tf.tensor2d([scaled], [1,1]);
+
+      const out = model.predict ? model.predict(input) : model.execute(input);
+      const val = (await out.data())[0];
+      document.getElementById('result').textContent = 'Predicción: ' + val.toFixed(3);
+      tf.dispose([input, out]);
+    }
+    document.getElementById('predictBtn').addEventListener('click', predict);
+    init();
+  </script>
+</body>
+</html>
